@@ -34,6 +34,6 @@ export function startMcpStdio(options: McpStdioOptions): StdioServerHandle {
   const transport = createModernTasksTransport(new StdioServerTransport(), modernTasks);
   return serveStdio(
     () => createMcpServer({ ...options, runBudgetGuard, incrementalVerifier, setOfMarksStore, ponytailActivationLedger, legacyTasksProtocol: false, requestScope }),
-    { legacy: 'reject', onerror: options.onError ?? writeStdioDiagnostic, transport },
+    { legacy: 'serve', onerror: options.onError ?? writeStdioDiagnostic, transport },
   );
 }

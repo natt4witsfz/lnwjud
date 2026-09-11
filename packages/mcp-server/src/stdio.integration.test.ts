@@ -93,6 +93,21 @@ function createClientAndTransport(): { readonly client: Client; readonly transpo
 }
 
 describe('MCP stdio transport', () => {
+  it('serves a Codex-era 2025-06-18 client over stdio', async () => {
+    const transport = new StdioClientTransport({ command: process.execPath, args: [fixturePath], stderr: 'pipe' });
+    const client = new Client(
+      { name: 'codex-compat-stdio-test-client', version: '0.1.0' },
+      { versionNegotiation: { mode: 'legacy' } },
+    );
+    try {
+      await client.connect(transport);
+      const listed = await client.listTools();
+      expect(listed.tools).toHaveLength(expectedAdvertisedToolCount);
+    } finally {
+      await client.close();
+    }
+  }, 30_000);
+
   it('serves independent 2026-07-28 requests with protocol-only stdout', async () => {
     const { client, transport, diagnostics } = createClientAndTransport();
 
