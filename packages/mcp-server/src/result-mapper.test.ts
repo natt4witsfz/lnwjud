@@ -139,6 +139,7 @@ describe('mapResult image payloads', () => {
     expect(response).toEqual({
       isError: true,
       content: [{ type: 'text', text: 'child failed' }],
+      structuredContent: { content: [{ type: 'text', text: 'child failed' }] },
     });
   });
 
