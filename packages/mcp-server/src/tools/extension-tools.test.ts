@@ -46,6 +46,7 @@ describe('skills and mcp bridge tools', () => {
     });
     await expect(registry.invoke('mcp_call', { server: 'mock', tool: 'ping', arguments: {}, userConfirmed: true })).resolves.toMatchObject({
       content: [{ type: 'text', text: 'pong' }],
+      structuredContent: { content: [{ type: 'text', text: 'pong' }] },
     });
   });
 
