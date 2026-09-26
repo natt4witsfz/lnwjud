@@ -187,11 +187,12 @@ function extractMcpToolResponse(value: unknown): McpToolResponse | undefined {
     content.push(parsed);
   }
 
-  const structuredContent = toStructuredContent(stripImagePayloads(record.structuredContent));
+  const structuredContent = toStructuredContent(stripImagePayloads(record.structuredContent))
+    ?? { content: content.map(stripMcpContentPayload) };
   return {
     content,
     ...(record.isError === true ? { isError: true } : {}),
-    ...(structuredContent === undefined ? {} : { structuredContent }),
+    structuredContent,
   };
 }
 
@@ -205,6 +206,12 @@ function readMcpContent(value: unknown): McpContent | undefined {
     return { type: 'image', data: record.data, mimeType: record.mimeType };
   }
   return undefined;
+}
+
+function stripMcpContentPayload(value: McpContent): Readonly<Record<string, unknown>> {
+  return value.type === 'image'
+    ? { type: 'image', mimeType: value.mimeType }
+    : { type: 'text', text: value.text };
 }
 
 function toText(value: unknown): string {
